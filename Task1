@@ -1,1 +1,100 @@
+'''
+TO-DO LIST
+A To-Do List application is a useful project that helps users manage and organize their tasks efficiently. 
+This project aims to create a command-line or GUI-based application using Python, allowing
+'''
 
+# Step 1: Defining Task class
+class Task:
+    def __init__(self, title, description="", completed=False):
+        self.title = title
+        self.description = description
+        self.completed = completed
+
+    def mark_complete(self):
+        self.completed = True
+
+    def __repr__(self):
+        return f"{'[✓]' if self.completed else '[X]'} {self.title}: {self.description}"
+        # Give Right/Wrong sign considering the task status
+
+# Step 2: Defining ToDoList class
+class ToDoList:
+    def __init__(self):
+        self.tasks = []
+
+    def add_task(self, task):
+        self.tasks.append(task) # Adding Task
+
+    def remove_task(self, title):
+        self.tasks = [task for task in self.tasks if task.title != title] # Remove task
+
+    def update_task(self, title, new_title=None, new_description=None): #Update the task
+        for task in self.tasks:
+            if task.title == title:
+                task.title = new_title or task.title
+                task.description = new_description or task.description
+                return
+
+    def list_tasks(self):
+        for task in self.tasks:
+            print(task)
+        # Printing the all task
+
+# Step 3: Defining storage functions
+import json
+
+# Saving the tasks given by user
+def save_tasks(tasks, filename="tasks.json"):
+    with open(filename, 'w') as file:
+        json.dump([task.__dict__ for task in tasks], file)
+
+# Loading the task as per demand
+def load_tasks(filename="tasks.json"):
+    try:
+        with open(filename, 'r') as file:
+            task_dicts = json.load(file)
+            return [Task(**task_dict) for task_dict in task_dicts]
+    except FileNotFoundError:
+        return []
+
+# Step 4: Defining the main program
+
+# Giving options to user to do operations
+def main():
+    todo_list = ToDoList()
+    todo_list.tasks = load_tasks()
+
+    while True:
+        print("\nTo-Do List Application")
+        print("1. Add Task")
+        print("2. Remove Task")
+        print("3. Mark Task Complete")
+        print("4. Show Tasks")
+        print("5. Save and Exit")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            title = input("Enter task title: ")
+            description = input("Enter task description: ")
+            todo_list.add_task(Task(title, description))
+        elif choice == "2":
+            title = input("Enter title of task to remove: ")
+            todo_list.remove_task(title)
+        elif choice == "3":
+            title = input("Enter title of task to mark complete: ")
+            for task in todo_list.tasks:
+                if task.title == title:
+                    task.mark_complete()
+        elif choice == "4":
+            todo_list.list_tasks()
+        elif choice == "5":
+            save_tasks(todo_list.tasks)
+            print("Tasks saved. Exiting...")
+            break
+        else:
+            print("Invalid option, please try again.")
+
+# Step 5 : Run the Program
+main()

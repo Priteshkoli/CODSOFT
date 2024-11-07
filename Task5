@@ -1,0 +1,136 @@
+'''
+Contact Book
+Contact Information: Store name, phone number, email, and address for each contact.
+Add Contact: Allow users to add new contacts with their details.
+View Contact List: Display a list of all saved contacts with names and phone numbers.
+Search Contact: Implement a search function to find contacts by name or phone number.
+Update Contact: Enable users to update contact details.
+Delete Contact: Provide an option to delete a contact.
+User Interface: Design a user-friendly interface for easy interaction.
+'''
+
+# Step 1: Initialize contact storage
+contacts = {}
+
+# Step 2: Define a function to add a new contact with validation
+def add_contact():
+    name = input("Enter contact name: ")
+
+    # Phone number validation (exactly 10 digits)
+    phone = input("Enter phone number: ")
+    while not (phone.isdigit() and len(phone) == 10):
+        print("Invalid phone number. Please enter a 10-digit number.")
+        phone = input("Enter phone number: ")
+
+    # Email validation (must end with "@gmail.com")
+    email = input("Enter email: ")
+    while not email.endswith("@gmail.com"):
+        print("Invalid email. Please enter an email ending with '@gmail.com'.")
+        email = input("Enter email: ")
+
+    address = input("Enter address: ")
+
+    # Save the validated contact information
+    contacts[name] = {
+        "phone": phone,
+        "email": email,
+        "address": address
+    }
+    print(f"Contact '{name}' added successfully.")
+
+# Step 3: Define a function to view all contacts
+def view_contacts():
+    if not contacts:
+        print("No contacts available.")
+        return
+
+    print("\nContact List:")
+    for name, details in contacts.items():
+        print(f"Name: {name}, Phone: {details['phone']}")
+
+# Step 4: Define a function to search for a contact
+def search_contact():
+    search_term = input("Enter name or phone number to search: ")
+
+    found = False
+    for name, details in contacts.items():
+        if search_term.lower() in name.lower() or search_term == details["phone"]:
+            print(f"Name: {name}, Phone: {details['phone']}, Email: {details['email']}, Address: {details['address']}")
+            found = True
+
+    if not found:
+        print("No contact found with that information.")
+
+# Step 5: Define a function to update a contact with validation
+def update_contact():
+    name = input("Enter the name of the contact to update: ")
+
+    if name in contacts:
+        print("Leave the field empty if you don't want to update it.")
+
+        # Update phone number with validation
+        phone = input("Enter new phone number: ")
+        if phone:
+            while not (phone.isdigit() and len(phone) == 10):
+                print("Invalid phone number. Please enter a 10-digit number.")
+                phone = input("Enter phone number: ")
+            contacts[name]["phone"] = phone
+
+        # Update email with validation
+        email = input("Enter new email: ")
+        if email:
+            while not email.endswith("@gmail.com"):
+                print("Invalid email. Please enter an email ending with '@gmail.com'.")
+                email = input("Enter email: ")
+            contacts[name]["email"] = email
+
+        # Update address
+        address = input("Enter new address: ")
+        if address:
+            contacts[name]["address"] = address
+
+        print(f"Contact '{name}' updated successfully.")
+    else:
+        print("Contact not found.")
+
+# Step 6: Define a function to delete a contact
+def delete_contact():
+    name = input("Enter the name of the contact to delete: ")
+
+    if name in contacts:
+        del contacts[name]
+        print(f"Contact '{name}' deleted successfully.")
+    else:
+        print("Contact not found.")
+
+# Step 7: Define the main function to show menu and handle user input
+def main():
+    while True:
+        print("\nContact Management System")
+        print("1. Add Contact")
+        print("2. View All Contacts")
+        print("3. Search Contact")
+        print("4. Update Contact")
+        print("5. Delete Contact")
+        print("6. Exit")
+
+        choice = input("Enter your choice (1-6): ")
+
+        if choice == "1":
+            add_contact()
+        elif choice == "2":
+            view_contacts()
+        elif choice == "3":
+            search_contact()
+        elif choice == "4":
+            update_contact()
+        elif choice == "5":
+            delete_contact()
+        elif choice == "6":
+            print("Exiting Contact Management System. Byee!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+# Step 8: Run the main function to start the program
+main()
